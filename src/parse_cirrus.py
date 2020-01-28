@@ -3,16 +3,19 @@ import gzip
 import json
 import pickle
 
-import MeCab
+from sudachipy import tokenizer
+from sudachipy import dictionary
 from tqdm import tqdm
 
 
-wakati = MeCab.Tagger("-O wakati -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
-wakati.parse("")
+wakati = dictionary.Dictionary().create()
+def wakati_parse(text):
+    tokens = [m.surface() for m in wakati.tokenize(text)]
+    return " ".join(tokens)
 
 cirrus_all = {}
-with gzip.open("data/jawiki-20190114-cirrussearch-content.json.gz") as fin:
-    with bz2.open("data/20190114cirrus_all.tsv.bz2", 'wt') as fout:
+with gzip.open("data/jawiki-20200106-cirrussearch-content.json.gz") as fin:
+    with bz2.open("data/20200106cirrus_all.tsv.bz2", 'wt') as fout:
         for line in tqdm(fin, total=2271620):
             json_line = json.loads(line)
             if "index" not in json_line:
@@ -20,4 +23,4 @@ with gzip.open("data/jawiki-20190114-cirrussearch-content.json.gz") as fin:
                 text = json_line["text"]
 
                 if title and text:
-                    print("\t".join([title, wakati.parse(text).strip()]), file=fout)
+                    print("\t".join([title, wakati_parse(text).strip()]), file=fout)
