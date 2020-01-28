@@ -12,7 +12,7 @@ logging.root.setLevel(level=logging.INFO)
 
 if __name__ == '__main__':
     documents = []
-    with bz2.open("data/20190114cirrus_all.tsv.bz2", 'rt') as f:
+    with bz2.open("data/20200106cirrus_all.tsv.bz2", 'rt') as f:
         for line in tqdm(f, total=1135267):
             l = line.strip().split("\t")
             title = l[0]
